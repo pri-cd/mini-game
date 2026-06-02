@@ -87,21 +87,7 @@ let executeRound = (humanChoice, machineChoice) => {
     else if (beats[machineChoice] === humanChoice) {
         ++machineScore;
         printInfo("machine");
-
     }
-
-    // else if ((humanChoice === r && machineChoice === s) ||
-    //     (humanChoice === p && machineChoice === r) ||
-    //     (humanChoice === s && machineChoice === p)) {
-    //     ++humanScore;
-    //     printInfo("human");
-    // } else if ((machineChoice === r && humanChoice === s) ||
-    //     (machineChoice === p && humanChoice === r) ||
-    //     (machineChoice === s && humanChoice === p)) {
-    //     ++machineScore;
-    //     printInfo("machine");
-    // }
-
 
     return;
 };
