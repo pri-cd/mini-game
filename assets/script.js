@@ -19,6 +19,11 @@ const choiceObject = {
     2: "scissors"
 };
 
+const beats = {
+    "rock": "scissors",
+    "scissors": "paper",
+    "paper": "rock"
+};
 
 /**
  * Note: I wish I could use something like global variable inside a class with get/set methods, but I'm not too far in JS. 
@@ -74,17 +79,30 @@ let executeRound = (humanChoice, machineChoice) => {
     if (humanChoice === machineChoice) {
         // No points awarded.
         printInfo("draw");
-    } else if ((humanChoice === r && machineChoice === s) ||
-        (humanChoice === p && machineChoice === r) ||
-        (humanChoice === s && machineChoice === p)) {
+    }
+    else if (beats[humanChoice] === machineChoice) {
         ++humanScore;
         printInfo("human");
-    } else if ((machineChoice === r && humanChoice === s) ||
-        (machineChoice === p && humanChoice === r) ||
-        (machineChoice === s && humanChoice === p)) {
+    }
+    else if (beats[machineChoice] === humanChoice) {
         ++machineScore;
         printInfo("machine");
+
     }
+
+    // else if ((humanChoice === r && machineChoice === s) ||
+    //     (humanChoice === p && machineChoice === r) ||
+    //     (humanChoice === s && machineChoice === p)) {
+    //     ++humanScore;
+    //     printInfo("human");
+    // } else if ((machineChoice === r && humanChoice === s) ||
+    //     (machineChoice === p && humanChoice === r) ||
+    //     (machineChoice === s && humanChoice === p)) {
+    //     ++machineScore;
+    //     printInfo("machine");
+    // }
+
+
     return;
 };
 
