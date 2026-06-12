@@ -1,119 +1,115 @@
-/**
- * 
- * Pseudocode: 
- * 1. Ask user for their input (rock, paper or scissors) : Case-Insensitive.
- * 3. Make computer choose any random choice.
- * 4. Compare and make one win. 
- * 5. Increment their scores, such that- 
- *  5.1. After they play 5 rounds- declare a winner or draw.
- */
-
 let humanScore = 0;
 let machineScore = 0;
-let roundNo = 0;
+let numRounds = 0;
 
-const numRounds = 5;
-const choiceObject = {
-    0: "rock",
-    1: "paper",
-    2: "scissors"
-};
+const MSG_HUMAN_WIN = "Human Wins";
+const MSG_MACHINE_WIN = "Machine Wins";
+const MSG_DRAW = "Draw";
+const NO_OF_ROUNDS = 5;
 
-const beats = {
-    "rock": "scissors",
-    "scissors": "paper",
-    "paper": "rock"
-};
 
-/**
- * Note: I wish I could use something like global variable inside a class with get/set methods, but I'm not too far in JS. 
- * */
-let resetScoreAndRound = () => {
+function removeResultsIfExists() {
+    const resultMsgExists = document.querySelector("#showResults");
+    if (resultMsgExists) {
+        resultMsgExists.remove();
+    }
+}
+
+function resetScoreAndRound() {
     humanScore = 0;
     machineScore = 0;
-    roundNo = 0;
-};
+    numRounds = 0;
+}
 
-let getComputerChoice = () => {
+function getMachineChoice() {
+    const choiceObject = {
+        0: "rock",
+        1: "paper",
+        2: "scissors"
+    };
+
     const numChoice = Math.floor(Math.random() * 3);
-    let choice = "";
-
-    choice = choiceObject[numChoice];
-    console.log("Choice(Machine): " + choice);
-    return choice;
-};
+    console.log("Choice(Machine): " + choiceObject[numChoice]);
+    return choiceObject[numChoice];
+}
 
 
-let getHumanChoice = () => {
-    let choice = "";
-    choice = prompt("Enter (Rock, Paper, Scissors):") || null;
+function executeLogicForGame(humanChoice, machineChoice) {
+    const beats = {
+        "rock": "scissors",
+        "scissors": "paper",
+        "paper": "rock"
+    };
 
-    if (choice !== null) {
-        console.log("Choice(Human): " + choice);
-        return choice.trim().toLowerCase();
-    }
-    return null;
-};
-
-let printInfo = (winner) => {
-
-    let statement = "";
-    if (winner === "draw") {
-        statement = statement.concat("Draw! Round: ");
-    }
-    else {
-        statement = statement.concat(winner, " ", "Wins! Round: ");
-    }
-    console.log(statement + roundNo + " Score (Machine | Human): " + machineScore + " | " + humanScore + ".");
-
-};
-
-let executeRound = (humanChoice, machineChoice) => {
-
-    const r = choiceObject[0];
-    const p = choiceObject[1];
-    const s = choiceObject[2];
-
-
-    ++roundNo;
     if (humanChoice === machineChoice) {
-        // No points awarded.
-        printInfo("draw");
+        return MSG_DRAW;
     }
-    else if (beats[humanChoice] === machineChoice) {
+
+    if (beats[humanChoice] === machineChoice) {
         ++humanScore;
-        printInfo("human");
+        return MSG_HUMAN_WIN;
     }
-    else if (beats[machineChoice] === humanChoice) {
+
+    if (beats[machineChoice] === humanChoice) {
         ++machineScore;
-        printInfo("machine");
+        return MSG_MACHINE_WIN;
+    }
+}
+
+function displayResults() {
+    removeResultsIfExists();
+
+    const divResults = document.querySelector("#results");
+    const resultMsg = document.createElement('span');
+
+
+    resultMsg.setAttribute("id", "showResults");
+    resultMsg.style.color = "brown";
+    resultMsg.textContent = MSG_DRAW;
+
+    if (humanScore > machineScore) {
+        resultMsg.style.color = "green";
+        resultMsg.textContent = MSG_HUMAN_WIN;
     }
 
-    return;
-};
-
-/**
- * Description: A game will have 5 Rounds of RPS.
- * Note: We'll increment the score as said.
- */
-let playGame = () => {
-
-    resetScoreAndRound();
-    for (let i = 0; i < numRounds; i++) {
-
-        const humanChoice = getHumanChoice();
-
-        if (humanChoice !== null) {
-            executeRound(humanChoice, getComputerChoice());
-        }
-        else {
-            console.log("Game Ends... (Bad Input, Resetting Scores!)");
-            resetScoreAndRound();
-        }
+    if (machineScore > humanScore) {
+        resultMsg.style.color = "red";
+        resultMsg.textContent = MSG_MACHINE_WIN;
     }
 
-    console.log((machineScore > humanScore) ? "Machine Wins!!!" : (machineScore < humanScore) ? "Human Wins" : "Drawwww!!!!");
-};
+    divResults.append(resultMsg);
+}
 
 
-playGame();
+function playGame(humanChoice) {
+    ++numRounds;
+    console.log(`> Results @ Round: ${numRounds} is > 
+        "${executeLogicForGame(getMachineChoice(), humanChoice)}"`);
+
+    if (numRounds === 5) {
+        displayResults();
+        resetScoreAndRound();
+        
+    }
+}
+
+function addButtonListeners() {
+
+
+    const div = document.querySelector('#buttonContainer');
+    div.addEventListener('click', (event) => {
+        let target = event.target;
+
+        switch (target.id) {
+            case "r":
+            case "p":
+            case "s":
+                playGame(event.target.textContent.toLowerCase());
+                break;
+            default:
+                break;
+        }
+    });
+}
+
+addButtonListeners();
